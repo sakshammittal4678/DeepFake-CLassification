@@ -46,24 +46,37 @@ def load_model(model_path: Path):
     return model
 
 
-def extract_frames(video_path: str):
+def extract_frames(video_path: str, target_fps: float = 3.0):
     """
-    Extract ALL frames from the video using cv2.VideoCapture.
-    Returns a list of frames as numpy arrays (RGB format).
+    Extract frames at a fixed rate (e.g., 3 FPS) from the video.
+    Returns a list of RGB frames.
     """
-    frames = []
     cap = cv2.VideoCapture(video_path)
 
     if not cap.isOpened():
         raise RuntimeError("Failed to open video file.")
 
+    video_fps = cap.get(cv2.CAP_PROP_FPS)
+    if video_fps <= 0:
+        video_fps = 30  # fallback if metadata is missing
+
+    frame_interval = int(video_fps / target_fps)
+    if frame_interval < 1:
+        frame_interval = 1
+
+    frames = []
+    frame_index = 0
+
     while True:
         ret, frame = cap.read()
         if not ret:
             break
-        # BGR -> RGB
-        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        frames.append(frame_rgb)
+
+        if frame_index % frame_interval == 0:
+            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            frames.append(frame_rgb)
+
+        frame_index += 1
 
     cap.release()
 
