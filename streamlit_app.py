@@ -234,6 +234,7 @@ def main():
                     # Preprocess and predict
                     x = preprocess_frames(frames)
                     preds = model.predict(x, verbose=0)
+                    st.write(preds)
                     prob_fake = aggregate_predictions(preds)
 
                     # Log prediction
