@@ -23,7 +23,7 @@ import pandas as pd
 # ==========================
 
 # Adjust this path to where your model .h5 file is stored in the repo
-MODEL_PATH = Path("models/deepfake_model.h5")
+MODEL_PATH = Path("Xception_finetune_86acc.h5")
 
 # Input frame size expected by your model
 FRAME_HEIGHT = 224
